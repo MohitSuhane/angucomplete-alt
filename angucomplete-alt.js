@@ -43,8 +43,6 @@
 
     // string constants
     var REQUIRED_CLASS = 'autocomplete-required';
-    var TEXT_SEARCHING = 'Searching...';
-    var TEXT_NORESULTS = 'No results found';
     var TEMPLATE_URL = '/angucomplete-alt/index.html';
 
     // Set the default template for this directive
@@ -52,8 +50,8 @@
         '<div class="angucomplete-holder" ng-class="{\'angucomplete-dropdown-visible\': showDropdown}">' +
         '  <input id="{{id}}_value" name="{{inputName}}" ng-class="{\'angucomplete-input-not-empty\': notEmpty}" ng-model="searchStr" ng-disabled="disableInput" type="{{inputType}}" placeholder="{{placeholder}}" maxlength="{{maxlength}}" limit="{{limit}}" ng-focus="onFocusHandler()" class="{{inputClass}}" ng-focus="resetHideResults()" ng-blur="hideResults($event)" autocapitalize="off" autocorrect="off" autocomplete="off" ng-change="inputChangeHandler(searchStr)"/>' +
         '  <div id="{{id}}_dropdown" class="angucomplete-dropdown" ng-show="showDropdown">' +
-        '    <div class="angucomplete-searching" ng-show="searching" ng-bind="textSearching"></div>' +
-        '    <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)" ng-bind="textNoResults"></div>' +
+        '    <div class="angucomplete-searching" ng-show="searching"></div>' +
+        '    <div class="angucomplete-searching" ng-show="!searching && (!results || results.length == 0)"></div>' +
         '    <div class="angucomplete-row" ng-repeat="result in results | limitTo: limit" ng-click="selectResult(result)" ng-mouseenter="hoverRow($index)" ng-class="{\'angucomplete-selected-row\': $index == currentIndex}">' +
         '      <div ng-if="imageField" class="angucomplete-image-holder">' +
         '        <img ng-if="result.image && result.image != \'\'" ng-src="{{result.image}}" class="angucomplete-image"/>' +
@@ -538,6 +536,7 @@
               text = formattedText = extractTitle(responseData[i]);
             }
 
+
             description = '';
             if (scope.descriptionField) {
               description = formattedDesc = extractValue(responseData[i], scope.descriptionField);
@@ -708,12 +707,6 @@
 
       scope.inputType = attrs.type ? attrs.type : 'text';
 
-      // set strings for "Searching..." and "No results"
-      scope.textSearching = attrs.textSearching ? attrs.textSearching : TEXT_SEARCHING;
-      scope.textNoResults = attrs.textNoResults ? attrs.textNoResults : TEXT_NORESULTS;
-      displaySearching = scope.textSearching === 'false' ? false : true;
-      displayNoResults = scope.textNoResults === 'false' ? false : true;
-
       // set max length (default to maxlength deault from html
       scope.maxlength = attrs.maxlength ? attrs.maxlength : MAX_LENGTH;
       scope.limit = attrs.limit ? attrs.limit: MAX_LIMIT;		
@@ -744,8 +737,7 @@
         disableInput: '=',
         initialValue: '=',
         localData: '=',
-		limit: '=',
-        remoteUrlRequestFormatter: '=',
+		remoteUrlRequestFormatter: '=',
         remoteUrlRequestWithCredentials: '@',
         remoteUrlResponseFormatter: '=',
         remoteUrlErrorCallback: '=',
